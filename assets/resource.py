@@ -73,7 +73,9 @@ class HTTPResource:
 
         with open(file_path, 'wb') as f:
             for block in response.iter_content(1024):
+                print('.', end='', file=sys.stderr)
                 f.write(block)
+            print()
 
         with open(version_file_path, 'wb') as f:
             f.write(version['version'].encode())
