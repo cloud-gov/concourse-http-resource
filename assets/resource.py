@@ -72,7 +72,7 @@ class HTTPResource:
 
         return {
             'version': version,
-            'metadata': {},
+            'metadata': [],
         }
 
     def run(self, command_name, json_data, command_argument):

@@ -12,7 +12,7 @@ def test_in(httpbin, tmpdir):
 
     output = cmd('in', source, [str(in_dir)], {'version': '9'})
 
-    assert output == {'version': {'version': '9'}, 'metadata': {}}
+    assert output == {'version': {'version': '9'}, 'metadata': []}
 
     assert in_dir.join('9').exists()
     assert len(in_dir.join('9').read()) == 9
