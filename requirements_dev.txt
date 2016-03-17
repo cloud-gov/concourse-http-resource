@@ -1,0 +1,5 @@
+pylama
+pytest
+isort
+responses
+pytest-httpbin
