@@ -50,6 +50,7 @@ class HTTPResource:
         """Download specific version to target_dir."""
 
         uri = source['uri']
+        file_name = source.get('filename')
         ssl_verify = source.get('ssl_verify', True)
 
         if isinstance(ssl_verify, bool):
@@ -63,7 +64,10 @@ class HTTPResource:
         response = requests.get(uri, stream=True, verify=verify)
         response.raise_for_status()
 
-        file_name = uri.split('/')[-1]
+        if file_name:
+            file_name = file_name.format(**version)
+        else:
+            file_name = uri.split('/')[-1]
         file_path = os.path.join(target_dir, file_name)
 
         with open(file_path, 'wb') as f:
