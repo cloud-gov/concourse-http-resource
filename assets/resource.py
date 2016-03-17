@@ -69,10 +69,15 @@ class HTTPResource:
         else:
             file_name = uri.split('/')[-1]
         file_path = os.path.join(target_dir, file_name)
+        version_file_path = os.path.join(target_dir, 'version')
 
         with open(file_path, 'wb') as f:
             for block in response.iter_content(1024):
                 f.write(block)
+
+        with open(version_file_path, 'wb') as f:
+            f.write(version['version'].encode())
+
 
         return {
             'version': version,

@@ -16,6 +16,8 @@ def test_in(httpbin, tmpdir):
 
     assert in_dir.join('9').exists()
     assert len(in_dir.join('9').read()) == 9
+    assert in_dir.join('version').exists()
+    assert in_dir.join('version').read() == '9'
 
 def test_in_filename(httpbin, tmpdir):
     """Test downloading versioned file with predetermined filename."""
