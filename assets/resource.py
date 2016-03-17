@@ -14,14 +14,12 @@ import requests
 class HTTPResource:
     """HTTP resource implementation."""
 
-    def check(self, source, params):
+    def check(self, source, version):
         """Check for new version(s)."""
 
         index = source['index']
         regex = re.compile(source['regex'])
         ssl_verify = source.get('ssl_verify', True)
-
-        version = params.get('version')
 
         if isinstance(ssl_verify, bool):
             verify = ssl_verify
@@ -102,11 +100,10 @@ class HTTPResource:
 
         # combine source and params
         source = data.get('source', {})
-        params = data.get('params', {})
         version = data.get('version', {})
 
         if command_name == 'check':
-            response = self.check(source, params)
+            response = self.check(source, version)
         elif command_name == 'in':
             response = self.in_cmd(command_argument[0], source, version)
         else:
