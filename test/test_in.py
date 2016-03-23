@@ -35,3 +35,21 @@ def test_in_filename(httpbin, tmpdir):
 
     assert in_dir.join('filename_9').exists()
     assert len(in_dir.join('filename_9').read()) == 9
+
+def test_in_unversioned_filename(httpbin, tmpdir):
+    """Test downloading unversioned file with predetermined filename."""
+
+    source = {
+        'uri': httpbin + '/range/9',
+        'filename': 'filename',
+    }
+
+    in_dir = tmpdir.mkdir('work_dir')
+
+    output = cmd('in', source, [str(in_dir)], {'version': '9'})
+
+    assert output == {'version': {'version': '9'}, 'metadata': []}
+
+    assert in_dir.join('filename').exists()
+    assert len(in_dir.join('filename').read()) == 9
+

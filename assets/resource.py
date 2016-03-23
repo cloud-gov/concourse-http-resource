@@ -14,23 +14,22 @@ import requests
 class HTTPResource:
     """HTTP resource implementation."""
 
-    def check(self, source, version):
-        """Check for new version(s)."""
+    def check_etag(self, source, version, response):
+        etag = response.headers.get('etag')
 
-        index = source['index']
+        # With etags, there is no sense of continuity. Either the tag
+        # matches or it is a new version.
+        new_version = [{'version': etag}]
+        if version == new_version[0]:
+            new_version = []
+        return new_version
+
+    def check_regex(self, source, version, response):
+
         regex = re.compile(source['regex'])
-        ssl_verify = source.get('ssl_verify', True)
 
-        if isinstance(ssl_verify, bool):
-            verify = ssl_verify
-        elif isinstance(ssl_verify, str):
-            verify = str(tempfile.NamedTemporaryFile(delete=False, prefix='ssl-').write(verify))
-
-        # request index and extract versions
-        response = requests.request('GET', index, verify=verify)
-        response.raise_for_status()
+        # extract versions
         index_response = response.text
-
         versions = regex.findall(index_response)
         versions.sort(key=lambda x: LooseVersion(x))
         versions = [{'version': v} for v in versions]
@@ -45,6 +44,26 @@ class HTTPResource:
             new_versions = [versions[-1]]
 
         return new_versions
+
+    def check(self, source, version):
+        """Check for new version(s)."""
+
+        index = source['index']
+        ssl_verify = source.get('ssl_verify', True)
+
+        if isinstance(ssl_verify, bool):
+            verify = ssl_verify
+        elif isinstance(ssl_verify, str):
+            verify = str(tempfile.NamedTemporaryFile(delete=False, prefix='ssl-').write(verify))
+
+        # request index
+        response = requests.request('GET', index, verify=verify)
+        response.raise_for_status()
+
+        if source.get('etag'):
+            return self.check_etag(source, version, response)
+        else:
+            return self.check_regex(source, version, response)
 
     def in_cmd(self, target_dir, source, version):
         """Download specific version to target_dir."""
