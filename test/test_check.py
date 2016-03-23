@@ -42,7 +42,7 @@ def test_check_etag(httpbin):
 
     output = cmd('check', source)
 
-    assert output == [{'version':'abc123'}]
+    assert output == [{'version': 'abc123'}]
 
 def test_check_etag_with_matching_version(httpbin):
     """Test if check returns latest version number."""
@@ -74,4 +74,4 @@ def test_check_etag_with_different_version(httpbin):
 
     output = cmd('check', source, version=version)
 
-    assert output == [{'version':'abc123'}]
+    assert output == [{'version': 'abc123'}]

@@ -15,6 +15,7 @@ class HTTPResource:
     """HTTP resource implementation."""
 
     def check_etag(self, source, version, response):
+        """Check for new version(s) based on an etag header."""
         etag = response.headers.get('etag')
 
         # With etags, there is no sense of continuity. Either the tag
@@ -25,6 +26,7 @@ class HTTPResource:
         return new_version
 
     def check_regex(self, source, version, response):
+        """Check for new version(s) based on a version regex."""
 
         regex = re.compile(source['regex'])
 

@@ -52,4 +52,3 @@ def test_in_unversioned_filename(httpbin, tmpdir):
 
     assert in_dir.join('filename').exists()
     assert len(in_dir.join('filename').read()) == 9
-
