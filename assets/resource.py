@@ -65,6 +65,11 @@ class HTTPResource:
         response = requests.request('GET', index, verify=verify)
         response.raise_for_status()
 
+        # Currently supports two types of http versioning.
+        # Etag-based versioning requires the site to have an 'etag'
+        #  (https://en.wikipedia.org/wiki/HTTP_ETag) defined.
+        # Regex-based versioning expects an index document that lists
+        #  the available versions in a regex-able fashion
         if source.get('etag'):
             return self.check_etag(source, version, response)
         else:
