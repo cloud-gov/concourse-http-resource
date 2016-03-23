@@ -1,3 +1,5 @@
+import pytest
+
 from helpers import cmd
 
 
@@ -31,6 +33,22 @@ def test_check_with_version(httpbin):
         {'version': '8'},
         {'version': '9'},
     ]
+
+def test_check_with_latest_version(httpbin):
+    """Test if check returns no version numbers."""
+
+    source = {
+        'index': httpbin + '/links/10',
+        'regex': "href='/links/10/(?P<version>[0-9]+)'",
+    }
+
+    version = {
+        'version': '9',
+    }
+
+    output = cmd('check', source, version=version)
+
+    assert output == []
 
 def test_check_etag(httpbin):
     """Test if check returns latest version number."""
@@ -75,3 +93,18 @@ def test_check_etag_with_different_version(httpbin):
     output = cmd('check', source, version=version)
 
     assert output == [{'version': 'abc123'}]
+
+def test_check_etag_with_no_etag_on_site(httpbin):
+    """It should throw an error if the etag is missing."""
+
+    source = {
+      'index': httpbin + '/get',
+      'etag': 'true'
+    }
+
+    version = {
+        'version': 'xyz789'
+    }
+
+    with pytest.raises(Exception):
+        cmd('check', source, version=version)

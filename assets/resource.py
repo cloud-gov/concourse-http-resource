@@ -18,6 +18,9 @@ class HTTPResource:
         """Check for new version(s) based on an etag header."""
         etag = response.headers.get('etag')
 
+        if etag is None:
+            raise Exception('Resource missing ETag')
+
         # With etags, there is no sense of continuity. Either the tag
         # matches or it is a new version.
         new_version = [{'version': etag}]
@@ -89,6 +92,7 @@ class HTTPResource:
             file_name = file_name.format(**version)
         else:
             file_name = uri.split('/')[-1]
+
         file_path = os.path.join(target_dir, file_name)
         version_file_path = os.path.join(target_dir, 'version')
 
