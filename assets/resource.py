@@ -80,10 +80,18 @@ class HTTPResource:
         with open(version_file_path, 'wb') as f:
             f.write(version['version'].encode())
 
+        metadata = []
+
+        # add all response headers to metadata
+        for header, value in response.headers.items():
+            metadata.append({'name': header, 'value': value})
+
+        # add url to metadata
+        metadata.append({'name': 'url', 'value': uri})
 
         return {
             'version': version,
-            'metadata': [],
+            'metadata': metadata,
         }
 
     def run(self, command_name, json_data, command_argument):
