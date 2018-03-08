@@ -36,7 +36,7 @@ class HTTPResource:
         versions = [{'version': v} for v in versions]
 
         # if version is specified get only newer versions
-        if version:
+        if version and version in versions:
             current_version = version
             new_versions = versions[versions.index(current_version):]
             new_versions.pop(0)
@@ -129,5 +129,6 @@ class HTTPResource:
             response = {}
 
         return json.dumps(response)
+
 
 print(HTTPResource().run(os.path.basename(__file__), sys.stdin.read(), sys.argv[1:]))
