@@ -5,4 +5,4 @@ responses
 pytest-httpbin
 # werkzeug == 2.1.0 does not work with httpbin
 # https://github.com/postmanlabs/httpbin/issues/673
-werkzeug<2.1.0
+werkzeug<3.1.0
